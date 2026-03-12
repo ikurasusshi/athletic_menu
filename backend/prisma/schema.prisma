@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Event {
+  SHORT       // 短距離（100〜400m）
+  MIDDLE_LONG // 中長距離（800m〜）
+  JUMP        // 跳躍
+  THROW       // 投擲
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  profile          Profile?
+  trainingSessions TrainingSession[]
+  competitionEvents CompetitionEvent[]
+}
+
+model Profile {
+  id           String  @id @default(cuid())
+  userId       String  @unique
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  event        Event
+  age          Int
+  gender       Gender
+  targetRecord String?
+  personalBest String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TrainingSession {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date           DateTime @default(now())
+  motivation     Int      // 1-5
+  muscleSoreness Json     // { "legs": "NONE"|"MILD"|"SEVERE", "arms": ..., "core": ... }
+  injuryStatus   Json     // { "part": string, "detail": string }[]
+  goalCommitment Int      // 1-5
+  generatedMenu  String   // AI生成メニュー（JSON文字列）
+
+  createdAt DateTime @default(now())
+}
+
+model CompetitionEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  date      DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
