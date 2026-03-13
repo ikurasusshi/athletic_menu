@@ -8,6 +8,24 @@ import { authMiddleware } from '../middleware/auth.js'
 const prisma = new PrismaClient()
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
+const MOCK_MENU = `
+1. ウォームアップ（15分）
+- ジョグ 800m
+- 動的ストレッチ（レッグスウィング・ヒップサークル各10回）
+- 流し 60m × 3本
+
+2. メインメニュー
+- 200m × 4本（レスト 3分・強度 80%）
+- 300m × 2本（レスト 5分・強度 85%）
+
+3. クールダウン（10分）
+- 軽いジョグ 400m
+- 静的ストレッチ（大腿四頭筋・ハムストリング各30秒）
+
+4. 本日のアドバイス
+[モック] これはモックレスポンスです。USE_MOCK_AI=false にすると Claude API を使用します。
+`.trim()
+
 export const sessionsRouter = new Hono()
 sessionsRouter.use('*', authMiddleware)
 
@@ -25,15 +43,18 @@ sessionsRouter.post('/', zValidator('json', conditionSchema), async (c) => {
   const profile = await prisma.profile.findUnique({ where: { userId } })
   if (!profile) return c.json({ error: 'Profile not found. Please set up your profile first.' }, 400)
 
-  const prompt = buildPrompt(profile, condition)
-
-  const message = await anthropic.messages.create({
-    model: 'claude-opus-4-6',
-    max_tokens: 2048,
-    messages: [{ role: 'user', content: prompt }],
-  })
-
-  const generatedMenu = message.content[0].type === 'text' ? message.content[0].text : ''
+  let generatedMenu: string
+  if (process.env.USE_MOCK_AI === 'true') {
+    generatedMenu = MOCK_MENU
+  } else {
+    const prompt = buildPrompt(profile, condition)
+    const message = await anthropic.messages.create({
+      model: 'claude-opus-4-6',
+      max_tokens: 2048,
+      messages: [{ role: 'user', content: prompt }],
+    })
+    generatedMenu = message.content[0].type === 'text' ? message.content[0].text : ''
+  }
 
   const session = await prisma.trainingSession.create({
     data: {
