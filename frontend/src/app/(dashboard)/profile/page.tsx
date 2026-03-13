@@ -115,7 +115,7 @@ export default function ProfilePage() {
               max={99}
               value={form.age}
               onChange={(e) => setForm((f) => ({ ...f, age: Number(e.target.value) }))}
-              className="w-32 rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              className="w-32 rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
@@ -153,7 +153,7 @@ export default function ProfilePage() {
               value={form.personalBest ?? ""}
               onChange={(e) => setForm((f) => ({ ...f, personalBest: e.target.value }))}
               placeholder="例：100m 11秒20"
-              className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
@@ -168,7 +168,7 @@ export default function ProfilePage() {
               value={form.targetRecord ?? ""}
               onChange={(e) => setForm((f) => ({ ...f, targetRecord: e.target.value }))}
               placeholder="例：100m 10秒台"
-              className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
         </div>
