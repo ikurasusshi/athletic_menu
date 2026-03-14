@@ -10,7 +10,7 @@ type DayMenu = {
   advice: string;
 };
 
-const DOW_HEADERS = ["日", "月", "火", "水", "木", "金", "土"];
+const DOW_HEADERS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const MOTIVATION_ICONS = ["😴", "😐", "🙂", "😊", "🔥"];
 const COMMIT_ICONS = ["💤", "😑", "👍", "💪", "🏆"];
@@ -32,7 +32,7 @@ function SessionDrawer({
 }) {
   const menu = parseMenu(session.generatedMenu);
   const date = new Date(session.createdAt);
-  const label = `${date.getMonth() + 1}月${date.getDate()}日（${"日月火水木金土"[date.getDay()]}）`;
+  const label = `${date.toLocaleDateString("en-US", { month: "long", day: "numeric", weekday: "short" })}`;
 
   return (
     <div className="fixed inset-0 z-40 flex" onClick={onClose}>
@@ -51,12 +51,12 @@ function SessionDrawer({
           {/* Condition summary */}
           <div className="bg-gray-50 rounded-2xl p-4 flex gap-6">
             <div className="flex flex-col items-center gap-1">
-              <span className="text-xs text-gray-400">モチベーション</span>
+              <span className="text-xs text-gray-400">Motivation</span>
               <span className="text-xl">{MOTIVATION_ICONS[session.motivation - 1]}</span>
               <span className="text-xs font-semibold text-gray-700">{session.motivation}/5</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <span className="text-xs text-gray-400">コミット度</span>
+              <span className="text-xs text-gray-400">Commitment</span>
               <span className="text-xl">{COMMIT_ICONS[session.goalCommitment - 1]}</span>
               <span className="text-xs font-semibold text-gray-700">{session.goalCommitment}/5</span>
             </div>
@@ -69,7 +69,7 @@ function SessionDrawer({
                 <div className="bg-green-50 border border-green-100 rounded-2xl p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <span>🌱</span>
-                    <span className="text-xs font-semibold text-green-800">ウォームアップ</span>
+                    <span className="text-xs font-semibold text-green-800">Warm-up</span>
                     <span className="ml-auto text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded-full">{menu.warmup.duration}</span>
                   </div>
                   <ul className="space-y-1">
@@ -84,7 +84,7 @@ function SessionDrawer({
                 <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <span>⚡</span>
-                    <span className="text-xs font-semibold text-blue-800">メインメニュー</span>
+                    <span className="text-xs font-semibold text-blue-800">Main Menu</span>
                   </div>
                   <div className="space-y-2">
                     {menu.main.map((item, i) => (
@@ -105,7 +105,7 @@ function SessionDrawer({
                 <div className="bg-purple-50 border border-purple-100 rounded-2xl p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <span>🌙</span>
-                    <span className="text-xs font-semibold text-purple-800">クールダウン</span>
+                    <span className="text-xs font-semibold text-purple-800">Cool-down</span>
                     <span className="ml-auto text-xs text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full">{menu.cooldown.duration}</span>
                   </div>
                   <ul className="space-y-1">
@@ -120,14 +120,14 @@ function SessionDrawer({
                 <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4">
                   <div className="flex items-center gap-2 mb-1">
                     <span>💡</span>
-                    <span className="text-xs font-semibold text-amber-800">アドバイス</span>
+                    <span className="text-xs font-semibold text-amber-800">Advice</span>
                   </div>
                   <p className="text-xs text-amber-900 leading-relaxed">{menu.advice}</p>
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-sm text-gray-400 text-center py-4">メニューデータがありません</p>
+            <p className="text-sm text-gray-400 text-center py-4">No menu data available.</p>
           )}
         </div>
       </div>
@@ -208,15 +208,15 @@ export default function HistoryPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">トレーニング記録</h1>
-        <p className="text-sm text-gray-500 mt-0.5">過去のメニューをカレンダーで確認</p>
+        <h1 className="text-xl font-bold text-gray-900">Training History</h1>
+        <p className="text-sm text-gray-500 mt-0.5">View past training sessions on the calendar</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
         {/* Month navigator */}
         <div className="flex items-center justify-between mb-4">
           <button onClick={prevMonth} className="p-2 rounded-xl hover:bg-gray-50 text-gray-500 transition text-lg">‹</button>
-          <span className="text-base font-semibold text-gray-900">{year}年 {month}月</span>
+          <span className="text-base font-semibold text-gray-900">{year} / {month}</span>
           <button onClick={nextMonth} className="p-2 rounded-xl hover:bg-gray-50 text-gray-500 transition text-lg">›</button>
         </div>
 
@@ -233,7 +233,7 @@ export default function HistoryPage() {
         {loading ? (
           <div className="flex items-center justify-center py-16 text-gray-400 text-sm">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-gray-200 border-t-gray-400 mr-2" />
-            読み込み中...
+            Loading...
           </div>
         ) : (
           <div className="grid grid-cols-7 gap-1">
@@ -288,10 +288,10 @@ export default function HistoryPage() {
         {!loading && (
           <div className="mt-4 flex items-center gap-4">
             <div className="flex items-center gap-1.5 text-xs text-gray-500">
-              <span className="h-2 w-2 rounded-full bg-blue-500" /> トレーニング実施
+              <span className="h-2 w-2 rounded-full bg-blue-500" /> Training session
             </div>
             <span className="ml-auto text-xs text-gray-400">
-              今月 {monthSummaries.length} 回
+              This month: {monthSummaries.length} sessions
             </span>
           </div>
         )}

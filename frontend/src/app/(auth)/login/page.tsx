@@ -22,7 +22,7 @@ export default function LoginPage() {
       saveToken(token);
       router.push("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "ログインに失敗しました");
+      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -31,14 +31,14 @@ export default function LoginPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">おかえりなさい</h1>
-        <p className="mt-1 text-sm text-gray-500">アカウントにログインしてください</p>
+        <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
+        <p className="mt-1 text-sm text-gray-500">Sign in to your account</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1.5">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            メールアドレス
+            Email address
           </label>
           <input
             id="email"
@@ -54,7 +54,7 @@ export default function LoginPage() {
 
         <div className="space-y-1.5">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            パスワード
+            Password
           </label>
           <input
             id="password"
@@ -83,18 +83,18 @@ export default function LoginPage() {
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              ログイン中...
+              Signing in...
             </span>
           ) : (
-            "ログイン"
+            "Sign in"
           )}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-500">
-        アカウントをお持ちでない方は{" "}
+        Don&apos;t have an account?{" "}
         <Link href="/register" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-          新規登録
+          Sign up
         </Link>
       </p>
     </div>

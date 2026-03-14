@@ -9,21 +9,21 @@ const prisma = new PrismaClient()
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 const MOCK_MENU = `
-1. ウォームアップ（15分）
-- ジョグ 800m
-- 動的ストレッチ（レッグスウィング・ヒップサークル各10回）
-- 流し 60m × 3本
+1. Warm-up (15 min)
+- Easy jog 800m
+- Dynamic stretching (leg swings, hip circles — 10 reps each)
+- Strides 60m × 3
 
-2. メインメニュー
-- 200m × 4本（レスト 3分・強度 80%）
-- 300m × 2本（レスト 5分・強度 85%）
+2. Main Menu
+- 200m × 4 reps (rest 3 min / intensity 80%)
+- 300m × 2 reps (rest 5 min / intensity 85%)
 
-3. クールダウン（10分）
-- 軽いジョグ 400m
-- 静的ストレッチ（大腿四頭筋・ハムストリング各30秒）
+3. Cool-down (10 min)
+- Light jog 400m
+- Static stretching (quadriceps, hamstrings — 30 sec each)
 
-4. 本日のアドバイス
-[モック] これはモックレスポンスです。USE_MOCK_AI=false にすると Claude API を使用します。
+4. Today's Advice
+[MOCK] This is a mock response. Set USE_MOCK_AI=false to use the Claude API.
 `.trim()
 
 export const sessionsRouter = new Hono()
@@ -90,10 +90,10 @@ sessionsRouter.get('/:id', async (c) => {
 
 function buildPrompt(profile: { event: string; age: number; gender: string; targetRecord: string | null; personalBest: string | null }, condition: z.infer<typeof conditionSchema>): string {
   const eventMap: Record<string, string> = {
-    SHORT: '短距離（100〜400m）',
-    MIDDLE_LONG: '中長距離（800m〜）',
-    JUMP: '跳躍',
-    THROW: '投擲',
+    SHORT: 'Sprints (100–400m)',
+    MIDDLE_LONG: 'Middle/Long Distance (800m+)',
+    JUMP: 'Jumps',
+    THROW: 'Throws',
   }
 
   const sorenessText = Object.entries(condition.muscleSoreness)
@@ -101,28 +101,28 @@ function buildPrompt(profile: { event: string; age: number; gender: string; targ
     .join(', ')
 
   const injuryText = condition.injuryStatus.length > 0
-    ? condition.injuryStatus.map((i) => `${i.part}（${i.detail}）`).join(', ')
-    : 'なし'
+    ? condition.injuryStatus.map((i) => `${i.part} (${i.detail})`).join(', ')
+    : 'None'
 
-  return `あなたは陸上競技のコーチです。以下の選手情報とコンディションに基づき、本日のトレーニングメニューを作成してください。
+  return `You are a track and field coach. Based on the athlete information and condition below, create today's training menu.
 
-【選手情報】
-- 種目: ${eventMap[profile.event] ?? profile.event}
-- 年齢: ${profile.age}歳
-- 性別: ${profile.gender}
-- 目標記録: ${profile.targetRecord ?? '未設定'}
-- 自己ベスト: ${profile.personalBest ?? '未設定'}
+[Athlete Information]
+- Event: ${eventMap[profile.event] ?? profile.event}
+- Age: ${profile.age}
+- Gender: ${profile.gender}
+- Target Record: ${profile.targetRecord ?? 'Not set'}
+- Personal Best: ${profile.personalBest ?? 'Not set'}
 
-【本日のコンディション】
-- モチベーション: ${condition.motivation}/5
-- 目標へのコミット度: ${condition.goalCommitment}/5
-- 筋肉痛: ${sorenessText}
-- 怪我・痛み: ${injuryText}
+[Today's Condition]
+- Motivation: ${condition.motivation}/5
+- Goal Commitment: ${condition.goalCommitment}/5
+- Muscle Soreness: ${sorenessText}
+- Injury / Pain: ${injuryText}
 
-【出力形式】
-以下の構成でメニューを作成してください：
-1. ウォームアップ（内容・時間）
-2. メインメニュー（種目・セット数・回数または距離・レスト時間・負荷強度）
-3. クールダウン（内容・時間）
-4. 本日のアドバイス（コンディションに応じた注意点）`
+[Output Format]
+Please structure the menu as follows:
+1. Warm-up (content and duration)
+2. Main Menu (exercise, sets, reps or distance, rest time, intensity)
+3. Cool-down (content and duration)
+4. Today's Advice (notes based on current condition)`
 }

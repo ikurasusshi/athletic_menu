@@ -5,16 +5,16 @@ import { useRouter } from "next/navigation";
 import { api, type ProfileInput } from "@/lib/api";
 
 const EVENT_OPTIONS = [
-  { value: "SHORT", label: "短距離", desc: "100m・200m・400m" },
-  { value: "MIDDLE_LONG", label: "中長距離", desc: "800m・1500m・マラソン" },
-  { value: "JUMP", label: "跳躍", desc: "走高跳・走幅跳・三段跳" },
-  { value: "THROW", label: "投擲", desc: "砲丸投・円盤投・やり投" },
+  { value: "SHORT", label: "Sprints (100–400m)", desc: "100m / 200m / 400m" },
+  { value: "MIDDLE_LONG", label: "Middle/Long Distance (800m+)", desc: "800m / 1500m / Marathon" },
+  { value: "JUMP", label: "Jumps", desc: "High Jump / Long Jump / Triple Jump" },
+  { value: "THROW", label: "Throws", desc: "Shot Put / Discus / Javelin" },
 ] as const;
 
 const GENDER_OPTIONS = [
-  { value: "MALE", label: "男性" },
-  { value: "FEMALE", label: "女性" },
-  { value: "OTHER", label: "その他" },
+  { value: "MALE", label: "Male" },
+  { value: "FEMALE", label: "Female" },
+  { value: "OTHER", label: "Other" },
 ] as const;
 
 export default function ProfilePage() {
@@ -42,7 +42,7 @@ export default function ProfilePage() {
           personalBest: profile.personalBest ?? "",
         });
       })
-      .catch(() => {/* 未登録は無視 */})
+      .catch(() => {/* ignore if profile not set up yet */})
       .finally(() => setFetching(false));
   }, []);
 
@@ -56,7 +56,7 @@ export default function ProfilePage() {
       setSaved(true);
       setTimeout(() => router.push("/dashboard"), 800);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "保存に失敗しました");
+      setError(err instanceof Error ? err.message : "Failed to save profile. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -74,14 +74,14 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">プロフィール設定</h1>
-        <p className="text-sm text-gray-500 mt-0.5">メニュー生成に使用する情報を登録してください</p>
+        <h1 className="text-xl font-bold text-gray-900">Profile Settings</h1>
+        <p className="text-sm text-gray-500 mt-0.5">Enter your information to personalize menu generation</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* 種目 */}
+        {/* Event */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-3">
-          <label className="block text-sm font-medium text-gray-800">競技種目</label>
+          <label className="block text-sm font-medium text-gray-800">Event</label>
           <div className="grid grid-cols-2 gap-2">
             {EVENT_OPTIONS.map((opt) => (
               <button
@@ -103,10 +103,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* 年齢・性別 */}
+        {/* Age & Gender */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
           <div className="space-y-1.5">
-            <label htmlFor="age" className="block text-sm font-medium text-gray-800">年齢</label>
+            <label htmlFor="age" className="block text-sm font-medium text-gray-800">Age</label>
             <input
               id="age"
               type="number"
@@ -120,7 +120,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-gray-800">性別</label>
+            <label className="block text-sm font-medium text-gray-800">Gender</label>
             <div className="flex gap-2">
               {GENDER_OPTIONS.map((opt) => (
                 <button
@@ -140,34 +140,34 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* 記録 */}
+        {/* Records */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
           <div className="space-y-1.5">
             <label htmlFor="personalBest" className="block text-sm font-medium text-gray-800">
-              自己ベスト
-              <span className="ml-1.5 text-xs font-normal text-gray-400">任意</span>
+              Personal Best
+              <span className="ml-1.5 text-xs font-normal text-gray-400">Optional</span>
             </label>
             <input
               id="personalBest"
               type="text"
               value={form.personalBest ?? ""}
               onChange={(e) => setForm((f) => ({ ...f, personalBest: e.target.value }))}
-              placeholder="例：100m 11秒20"
+              placeholder="e.g., 100m 11.20s"
               className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
           <div className="space-y-1.5">
             <label htmlFor="targetRecord" className="block text-sm font-medium text-gray-800">
-              目標記録
-              <span className="ml-1.5 text-xs font-normal text-gray-400">任意</span>
+              Target Record
+              <span className="ml-1.5 text-xs font-normal text-gray-400">Optional</span>
             </label>
             <input
               id="targetRecord"
               type="text"
               value={form.targetRecord ?? ""}
               onChange={(e) => setForm((f) => ({ ...f, targetRecord: e.target.value }))}
-              placeholder="例：100m 10秒台"
+              placeholder="e.g., 100m sub-10s"
               className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
@@ -183,7 +183,7 @@ export default function ProfilePage() {
         {saved && (
           <div className="flex items-center gap-2 rounded-xl bg-green-50 border border-green-100 px-4 py-3">
             <span className="text-green-500 text-sm">✓</span>
-            <p className="text-sm text-green-700">保存しました。ダッシュボードに移動します...</p>
+            <p className="text-sm text-green-700">Saved. Redirecting to dashboard...</p>
           </div>
         )}
 
@@ -195,10 +195,10 @@ export default function ProfilePage() {
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              保存中...
+              Saving...
             </span>
           ) : (
-            "保存してダッシュボードへ"
+            "Save and go to Dashboard"
           )}
         </button>
       </form>

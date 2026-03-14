@@ -19,7 +19,7 @@ export default function RegisterPage() {
     setError("");
 
     if (password !== confirm) {
-      setError("パスワードが一致しません");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -29,7 +29,7 @@ export default function RegisterPage() {
       saveToken(token);
       router.push("/profile");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "登録に失敗しました");
+      setError(err instanceof Error ? err.message : "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -38,14 +38,14 @@ export default function RegisterPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">アカウント作成</h1>
-        <p className="mt-1 text-sm text-gray-500">無料で始めましょう</p>
+        <h1 className="text-2xl font-bold text-gray-900">Create account</h1>
+        <p className="mt-1 text-sm text-gray-500">Get started for free</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1.5">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            メールアドレス
+            Email address
           </label>
           <input
             id="email"
@@ -61,8 +61,8 @@ export default function RegisterPage() {
 
         <div className="space-y-1.5">
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            パスワード
-            <span className="ml-1.5 text-xs font-normal text-gray-400">8文字以上</span>
+            Password
+            <span className="ml-1.5 text-xs font-normal text-gray-400">8+ characters</span>
           </label>
           <input
             id="password"
@@ -79,7 +79,7 @@ export default function RegisterPage() {
 
         <div className="space-y-1.5">
           <label htmlFor="confirm" className="block text-sm font-medium text-gray-700">
-            パスワード（確認）
+            Confirm password
           </label>
           <input
             id="confirm"
@@ -108,18 +108,18 @@ export default function RegisterPage() {
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              登録中...
+              Creating account...
             </span>
           ) : (
-            "アカウントを作成"
+            "Create account"
           )}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-500">
-        すでにアカウントをお持ちの方は{" "}
+        Already have an account?{" "}
         <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-          ログイン
+          Sign in
         </Link>
       </p>
     </div>

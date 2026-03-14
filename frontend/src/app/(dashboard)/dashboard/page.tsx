@@ -4,18 +4,18 @@ import { useState } from "react";
 import { api, type ConditionInput } from "@/lib/api";
 
 const MUSCLE_PARTS = [
-  { key: "legs", label: "脚" },
-  { key: "hamstrings", label: "ハムストリング" },
-  { key: "calves", label: "ふくらはぎ" },
-  { key: "core", label: "体幹" },
-  { key: "arms", label: "腕" },
-  { key: "shoulders", label: "肩" },
+  { key: "legs", label: "Legs" },
+  { key: "hamstrings", label: "Hamstrings" },
+  { key: "calves", label: "Calves" },
+  { key: "core", label: "Core" },
+  { key: "arms", label: "Arms" },
+  { key: "shoulders", label: "Shoulders" },
 ];
 
 const SEVERITY_OPTIONS = [
-  { value: "NONE", label: "なし", color: "bg-gray-100 text-gray-600 border-gray-200" },
-  { value: "MILD", label: "軽度", color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
-  { value: "SEVERE", label: "重度", color: "bg-red-50 text-red-700 border-red-200" },
+  { value: "NONE", label: "None", color: "bg-gray-100 text-gray-600 border-gray-200" },
+  { value: "MILD", label: "Mild", color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
+  { value: "SEVERE", label: "Severe", color: "bg-red-50 text-red-700 border-red-200" },
 ] as const;
 
 type Severity = "NONE" | "MILD" | "SEVERE";
@@ -81,7 +81,7 @@ export default function DashboardPage() {
     setGeneratedMenu("");
     try {
       const injuryStatus = injuryText.trim()
-        ? [{ part: "その他", detail: injuryText.trim() }]
+        ? [{ part: "Other", detail: injuryText.trim() }]
         : [];
 
       const condition: ConditionInput = {
@@ -94,7 +94,7 @@ export default function DashboardPage() {
       const session = await api.sessions.create(condition);
       setGeneratedMenu(session.generatedMenu);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "メニューの生成に失敗しました");
+      setError(err instanceof Error ? err.message : "Failed to generate training menu. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -104,8 +104,8 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-gray-900">今日のトレーニング</h1>
-        <p className="text-sm text-gray-500 mt-0.5">コンディションを入力して、最適なメニューを生成しましょう</p>
+        <h1 className="text-xl font-bold text-gray-900">Today's Training</h1>
+        <p className="text-sm text-gray-500 mt-0.5">Enter your condition to generate the optimal training menu</p>
       </div>
 
       {/* Condition form */}
@@ -113,8 +113,8 @@ export default function DashboardPage() {
         {/* Motivation */}
         <div className="p-6">
           <RatingInput
-            label="モチベーション"
-            hint="今日のやる気・集中力"
+            label="Motivation"
+            hint="Today's energy & focus level"
             value={motivation}
             onChange={setMotivation}
             icons={["😴", "😐", "🙂", "😊", "🔥"]}
@@ -124,8 +124,8 @@ export default function DashboardPage() {
         {/* Goal commitment */}
         <div className="p-6">
           <RatingInput
-            label="目標へのコミット度"
-            hint="目標達成への意識の高さ"
+            label="Goal Commitment"
+            hint="Level of dedication to your goal"
             value={goalCommitment}
             onChange={setGoalCommitment}
             icons={["💤", "😑", "👍", "💪", "🏆"]}
@@ -135,8 +135,8 @@ export default function DashboardPage() {
         {/* Muscle soreness */}
         <div className="p-6">
           <div className="mb-4">
-            <p className="text-sm font-medium text-gray-800">筋肉痛の状態</p>
-            <p className="text-xs text-gray-400 mt-0.5">部位ごとに程度を選択してください</p>
+            <p className="text-sm font-medium text-gray-800">Muscle Soreness</p>
+            <p className="text-xs text-gray-400 mt-0.5">Select the severity for each muscle group</p>
           </div>
           <div className="space-y-3">
             {MUSCLE_PARTS.map((part) => (
@@ -166,14 +166,14 @@ export default function DashboardPage() {
         {/* Injury */}
         <div className="p-6">
           <label className="block text-sm font-medium text-gray-800 mb-1">
-            怪我・痛みの詳細
-            <span className="ml-1.5 text-xs font-normal text-gray-400">任意</span>
+            Injury / Pain Details
+            <span className="ml-1.5 text-xs font-normal text-gray-400">Optional</span>
           </label>
           <textarea
             value={injuryText}
             onChange={(e) => setInjuryText(e.target.value)}
             rows={2}
-            placeholder="例：左膝の外側に違和感がある"
+            placeholder="e.g., Discomfort on the outside of the left knee"
             className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
           />
         </div>
@@ -196,10 +196,10 @@ export default function DashboardPage() {
         {loading ? (
           <span className="flex items-center justify-center gap-2">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-            AIがメニューを生成中...
+            AI is generating your menu...
           </span>
         ) : (
-          "✨ トレーニングメニューを生成"
+          "✨ Generate Training Menu"
         )}
       </button>
 
@@ -208,7 +208,7 @@ export default function DashboardPage() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-lg">📋</span>
-            <h2 className="text-base font-semibold text-gray-900">今日のトレーニングメニュー</h2>
+            <h2 className="text-base font-semibold text-gray-900">Today's Training Menu</h2>
           </div>
           <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap leading-relaxed">
             {generatedMenu}

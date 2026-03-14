@@ -22,20 +22,20 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         <div className="relative space-y-6">
           <h2 className="text-4xl font-bold text-white leading-snug">
-            あなたの<br />
-            コンディションに<br />
-            最適なメニューを。
+            The optimal menu<br />
+            for your<br />
+            condition.
           </h2>
           <p className="text-blue-200/70 text-sm leading-relaxed max-w-xs">
-            体調・筋肉痛・モチベーションを入力するだけで、
-            AIが今日のベストなトレーニングメニューを自動生成します。
+            Just enter your physical condition, muscle soreness, and motivation level —
+            AI will automatically generate the best training menu for today.
           </p>
 
           <div className="flex gap-6 pt-2">
             {[
-              { label: "種目対応", value: "全種目" },
-              { label: "AI生成", value: "Claude" },
-              { label: "記録保存", value: "無制限" },
+              { label: "All Events", value: "Supported" },
+              { label: "AI Generation", value: "Claude" },
+              { label: "History", value: "Unlimited" },
             ].map((item) => (
               <div key={item.label}>
                 <p className="text-white font-semibold text-sm">{item.value}</p>

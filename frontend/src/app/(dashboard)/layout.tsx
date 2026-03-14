@@ -5,9 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { removeToken } from "@/lib/auth";
 
 const navItems = [
-  { href: "/dashboard", label: "ホーム", icon: "⚡" },
-  { href: "/history", label: "記録", icon: "📋" },
-  { href: "/profile", label: "プロフィール", icon: "👤" },
+  { href: "/dashboard", label: "Home", icon: "⚡" },
+  { href: "/history", label: "History", icon: "📋" },
+  { href: "/profile", label: "Profile", icon: "👤" },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors"
           >
             <span className="text-base">🚪</span>
-            ログアウト
+            Log out
           </button>
         </div>
       </aside>
